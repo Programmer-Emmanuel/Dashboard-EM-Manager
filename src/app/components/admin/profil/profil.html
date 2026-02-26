@@ -1,0 +1,436 @@
+<div class="space-y-6">
+  <!-- En-tête de la page -->
+  <div class="flex items-center justify-between">
+    <h2 class="text-2xl font-bold text-white">Mon Profil</h2>
+    <button (click)="openEditModal()" 
+            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+      </svg>
+      Modifier le profil
+    </button>
+  </div>
+
+  <!-- État de chargement (skeleton) -->
+  <div *ngIf="isLoading" class="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 p-6">
+    <div class="flex items-center gap-6 mb-6">
+      <div class="w-24 h-24 bg-slate-700 rounded-full animate-pulse"></div>
+      <div class="space-y-3 flex-1">
+        <div class="h-8 bg-slate-700 rounded w-48 animate-pulse"></div>
+        <div class="h-4 bg-slate-700 rounded w-32 animate-pulse"></div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <div class="h-4 bg-slate-700 rounded w-24 animate-pulse"></div>
+        <div class="h-8 bg-slate-700 rounded w-full animate-pulse"></div>
+      </div>
+      <div class="space-y-2">
+        <div class="h-4 bg-slate-700 rounded w-24 animate-pulse"></div>
+        <div class="h-8 bg-slate-700 rounded w-full animate-pulse"></div>
+      </div>
+      <div class="space-y-2">
+        <div class="h-4 bg-slate-700 rounded w-24 animate-pulse"></div>
+        <div class="h-8 bg-slate-700 rounded w-full animate-pulse"></div>
+      </div>
+      <div class="space-y-2">
+        <div class="h-4 bg-slate-700 rounded w-24 animate-pulse"></div>
+        <div class="h-8 bg-slate-700 rounded w-full animate-pulse"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error" class="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 text-center">
+    <svg class="w-12 h-12 text-red-500 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+    <h3 class="text-lg font-semibold text-white mb-2">Erreur de chargement</h3>
+    <p class="text-slate-400">{{ error }}</p>
+    <button (click)="loadAdminInfo()" 
+            class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
+      Réessayer
+    </button>
+  </div>
+
+  <!-- Contenu du profil -->
+  <div *ngIf="!isLoading && !error && admin" class="space-y-6">
+    <!-- Carte principale du profil -->
+    <div class="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 overflow-hidden">
+      <!-- En-tête avec avatar -->
+      <div class="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 p-6 border-b border-slate-700">
+        <div class="flex items-center gap-6">
+          <!-- Avatar avec image ou initiales -->
+          <div class="relative">
+            <div class="w-24 h-24 rounded-full overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+              <ng-container *ngIf="admin.image; else avatarFallback">
+                <img [src]="admin.image" alt="Photo de profil" class="w-full h-full object-cover">
+              </ng-container>
+              <ng-template #avatarFallback>
+                <span class="text-white text-2xl font-bold">{{ getInitials() }}</span>
+              </ng-template>
+            </div>
+            <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-4 border-slate-800 rounded-full"></div>
+          </div>
+          
+          <!-- Infos rapides -->
+          <div class="flex-1">
+            <h1 class="text-2xl font-bold text-white">{{ admin.nom }}</h1>
+            <p class="text-indigo-400 mt-1">{{ admin.role == 1 ? 'Super Administrateur' : 'Sous Administrateur' }}</p>
+            <div class="flex items-center gap-4 mt-3">
+              <span class="flex items-center gap-1 text-sm text-slate-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Membre depuis {{ formatDate(admin.created_at) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grille d'informations -->
+      <div class="p-6">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          Informations personnelles
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Nom complet -->
+          <div class="bg-slate-700/20 rounded-xl p-4 border border-slate-700/50">
+            <label class="text-xs text-slate-400 uppercase tracking-wider">Nom complet</label>
+            <p class="text-white font-medium mt-1 text-lg">{{ admin.nom }}</p>
+          </div>
+
+          <!-- Email -->
+          <div class="bg-slate-700/20 rounded-xl p-4 border border-slate-700/50">
+            <label class="text-xs text-slate-400 uppercase tracking-wider">Adresse email</label>
+            <p class="text-white font-medium mt-1 text-lg flex items-center gap-2">
+              <span>{{ admin.email }}</span>
+              <span class="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs rounded-full">Vérifié</span>
+            </p>
+          </div>
+
+          <!-- Téléphone -->
+          <div class="bg-slate-700/20 rounded-xl p-4 border border-slate-700/50">
+            <label class="text-xs text-slate-400 uppercase tracking-wider">Téléphone</label>
+            <p class="text-white font-medium mt-1 text-lg">{{ admin.telephone || 'Non renseigné' }}</p>
+          </div>
+
+          <!-- Rôle -->
+          <div class="bg-slate-700/20 rounded-xl p-4 border border-slate-700/50">
+            <label class="text-xs text-slate-400 uppercase tracking-wider">Rôle</label>
+            <p class="text-white font-medium mt-1 text-lg">
+              <span class="px-3 py-1 bg-indigo-500/20 text-indigo-400 rounded-lg text-sm">
+                {{ admin.role == 1 ? 'Super Administrateur' : 'Sous Administrateur' }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cartes supplémentaires -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Sécurité -->
+      <div class="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 p-6">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          Sécurité
+        </h3>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400">Mot de passe</span>
+            <button (click)="openPasswordModal()" class="text-indigo-400 hover:text-indigo-300 text-sm font-medium">
+              Changer
+            </button>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400">Authentification à deux facteurs</span>
+            <span class="px-2 py-0.5 bg-slate-700 text-slate-300 text-xs rounded-full">Désactivé</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions rapides -->
+      <div class="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 p-6">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+          Actions rapides
+        </h3>
+        <div class="space-y-2">
+          <button (click)="openEditModal()" 
+                  class="w-full text-left px-4 py-3 bg-slate-700/30 hover:bg-slate-700/50 rounded-xl text-slate-300 hover:text-white transition-all duration-200 flex items-center gap-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+            </svg>
+            Modifier mes informations
+          </button>
+          <button (click)="openPasswordModal()" 
+                  class="w-full text-left px-4 py-3 bg-slate-700/30 hover:bg-slate-700/50 rounded-xl text-slate-300 hover:text-white transition-all duration-200 flex items-center gap-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            Changer mon mot de passe
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal d'édition du profil -->
+<div *ngIf="showEditModal" 
+     class="fixed inset-0 z-50 flex items-center justify-center p-4"
+     (click)="closeEditModal()">
+  
+  <!-- Overlay avec flou -->
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+  
+  <!-- Modal avec scroll -->
+  <div class="relative bg-slate-800/90 backdrop-blur-md border border-slate-700 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl shadow-indigo-500/10"
+       (click)="$event.stopPropagation()">
+    
+    <!-- En-tête de la modal -->
+    <div class="sticky top-0 bg-slate-800/90 backdrop-blur-md border-b border-slate-700 p-6 flex items-center justify-between">
+      <h3 class="text-xl font-bold text-white flex items-center gap-2">
+        <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+        </svg>
+        Modifier mon profil
+      </h3>
+      <button (click)="closeEditModal()" 
+              class="text-slate-400 hover:text-white bg-slate-700/50 hover:bg-slate-700 p-2 rounded-lg transition-all duration-200">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Corps du formulaire -->
+    <div class="p-6">
+      <form (ngSubmit)="onSubmit()" #editForm="ngForm">
+        <!-- Avatar -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-slate-300 mb-3">
+            Photo de profil
+          </label>
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <div class="w-20 h-20 rounded-full overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                <ng-container *ngIf="previewImage; else previewFallback">
+                  <img [src]="previewImage" alt="Aperçu" class="w-full h-full object-cover">
+                </ng-container>
+                <ng-template #previewFallback>
+                  <ng-container *ngIf="admin?.image; else noImage">
+                    <img [src]="admin?.image" alt="Photo actuelle" class="w-full h-full object-cover">
+                  </ng-container>
+                  <ng-template #noImage>
+                    <span class="text-white text-xl font-bold">{{ getInitials() }}</span>
+                  </ng-template>
+                </ng-template>
+              </div>
+            </div>
+            <div class="flex-1">
+              <input type="file" 
+                     (change)="onFileSelected($event)" 
+                     accept="image/jpeg,image/png,image/jpg"
+                     class="hidden" 
+                     #fileInput>
+              <button type="button" 
+                      (click)="fileInput.click()"
+                      class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
+                Choisir une image
+              </button>
+              <p class="text-xs text-slate-400 mt-2">
+                JPG, PNG • Max 2MB
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Champs du formulaire -->
+        <div class="space-y-4">
+          <!-- Nom -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">
+              Nom complet <span class="text-red-400">*</span>
+            </label>
+            <input type="text" 
+                   [(ngModel)]="editFormData.nom" 
+                   name="nom"
+                   required
+                   class="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200">
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">
+              Email <span class="text-red-400">*</span>
+            </label>
+            <input type="email" 
+                   [(ngModel)]="editFormData.email" 
+                   name="email"
+                   required
+                   email
+                   class="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200">
+          </div>
+
+          <!-- Téléphone -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">
+              Téléphone
+            </label>
+            <input type="tel" 
+                   [(ngModel)]="editFormData.telephone" 
+                   name="telephone"
+                   pattern="[0-9]{10}"
+                   maxlength="10"
+                   class="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                   placeholder="0612345678">
+            <p class="text-xs text-slate-400 mt-1">10 chiffres, sans espaces</p>
+          </div>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div *ngIf="editError" class="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+          <p class="text-sm text-red-400">{{ editError }}</p>
+        </div>
+
+        <!-- Boutons d'action (sticky en bas) -->
+        <div class="sticky bottom-0 bg-slate-800/90 backdrop-blur-md border-t border-slate-700 mt-6 pt-4 flex flex-col sm:flex-row gap-3 justify-end">
+          <button type="button" 
+                  (click)="closeEditModal()"
+                  class="px-6 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-700 transition-all duration-200">
+            Annuler
+          </button>
+          <button type="submit" 
+                  [disabled]="!editForm.form.valid || isSubmitting"
+                  class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            <svg *ngIf="isSubmitting" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            {{ isSubmitting ? 'Enregistrement...' : 'Enregistrer les modifications' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de changement de mot de passe -->
+<div *ngIf="showPasswordModal" 
+     class="fixed inset-0 z-50 flex items-center justify-center p-4"
+     (click)="closePasswordModal()">
+  
+  <!-- Overlay avec flou -->
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+  
+  <!-- Modal avec scroll -->
+  <div class="relative bg-slate-800/90 backdrop-blur-md border border-slate-700 rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl shadow-indigo-500/10"
+       (click)="$event.stopPropagation()">
+    
+    <!-- En-tête de la modal -->
+    <div class="sticky top-0 bg-slate-800/90 backdrop-blur-md border-b border-slate-700 p-6 flex items-center justify-between">
+      <h3 class="text-xl font-bold text-white flex items-center gap-2">
+        <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Changer le mot de passe
+      </h3>
+      <button (click)="closePasswordModal()" 
+              class="text-slate-400 hover:text-white bg-slate-700/50 hover:bg-slate-700 p-2 rounded-lg transition-all duration-200">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Corps du formulaire -->
+    <div class="p-6">
+      <form (ngSubmit)="onPasswordSubmit()" #passwordForm="ngForm">
+        <div class="space-y-4">
+          <!-- Ancien mot de passe -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">
+              Ancien mot de passe <span class="text-red-400">*</span>
+            </label>
+            <input type="password" 
+                   [(ngModel)]="passwordFormData.ancien" 
+                   name="ancien"
+                   required
+                   minlength="6"
+                   class="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200">
+          </div>
+
+          <!-- Nouveau mot de passe -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">
+              Nouveau mot de passe <span class="text-red-400">*</span>
+            </label>
+            <input type="password" 
+                   [(ngModel)]="passwordFormData.nouveau" 
+                   name="nouveau"
+                   required
+                   minlength="6"
+                   class="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200">
+            <p class="text-xs text-slate-400 mt-1">Minimum 6 caractères</p>
+          </div>
+
+          <!-- Confirmation du nouveau mot de passe -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">
+              Confirmer le nouveau mot de passe <span class="text-red-400">*</span>
+            </label>
+            <input type="password" 
+                   [(ngModel)]="passwordFormData.nouveau_confirmation" 
+                   name="nouveau_confirmation"
+                   required
+                   minlength="6"
+                   class="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200">
+          </div>
+
+          <!-- Message de validation des mots de passe -->
+          <div *ngIf="passwordFormData.nouveau && passwordFormData.nouveau_confirmation && passwordFormData.nouveau !== passwordFormData.nouveau_confirmation" 
+               class="text-sm text-red-400">
+            Les mots de passe ne correspondent pas
+          </div>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div *ngIf="passwordError" class="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+          <p class="text-sm text-red-400">{{ passwordError }}</p>
+        </div>
+
+        <!-- Message de succès -->
+        <div *ngIf="passwordSuccess" class="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+          <p class="text-sm text-green-400">{{ passwordSuccess }}</p>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="mt-6 pt-4 border-t border-slate-700 flex flex-col sm:flex-row gap-3 justify-end">
+          <button type="button" 
+                  (click)="closePasswordModal()"
+                  class="px-6 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-700 transition-all duration-200">
+            Annuler
+          </button>
+          <button type="submit" 
+                  [disabled]="!isPasswordFormValid() || isPasswordSubmitting"
+                  class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            <svg *ngIf="isPasswordSubmitting" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            {{ isPasswordSubmitting ? 'Modification...' : 'Modifier le mot de passe' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

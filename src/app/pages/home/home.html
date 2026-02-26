@@ -1,0 +1,202 @@
+<app-nav></app-nav>
+
+<!-- Admin Dashboard Landing Page -->
+<div class="min-h-screen bg-slate-900 border-t border-slate-500">
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden pt-24 pb-20 lg:pt-32 lg:pb-28">
+    <!-- Étoiles fines en arrière-plan -->
+    <!-- <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute inset-0" 
+           style="background-image: radial-gradient(circle at 2px 2px, rgb(255, 255, 255) 1px, transparent 1px); 
+                  background-size: 30px 30px;
+                  opacity: 0.4;">
+      </div>
+    </div> -->
+    
+    <!-- Background gradient -->
+    <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/20 via-slate-900 to-slate-900"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-4xl mx-auto">
+        <!-- Admin badge -->
+        <div class="inline-flex items-center bg-indigo-500/10 border border-indigo-500/20 rounded-full px-4 py-2 mb-8">
+          <svg class="w-4 h-4 text-indigo-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="text-sm font-medium text-indigo-300">Espace Administration</span>
+        </div>
+        
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
+          EM-MANAGER
+          <span class="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+            Administration & Pilotage
+          </span>
+        </h1>
+        <p class="text-lg sm:text-xl text-slate-400 mb-10 max-w-2xl mx-auto">
+          Interface d'administration complète pour superviser vos équipes, 
+          analyser les performances et gérer l'ensemble des activités des entreprises.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a *ngIf="authService.isAuthenticated()" routerLink="/dashboard" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200 transform hover:scale-105">
+            Accéder au tableau de bord
+          </a>
+          <a *ngIf="!authService.isAuthenticated()" routerLink="/connexion" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200 transform hover:scale-105">
+            Accéder au tableau de bord
+          </a>
+          <a routerLink="/apropos" class="bg-slate-800 hover:bg-slate-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200 border border-slate-700">
+            Documentation admin
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admin Features Section -->
+  <section class="py-20 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-white mb-4">
+          Outils d'administration avancés
+        </h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          Tous les outils nécessaires pour gérer et superviser les entreprises efficacement
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Admin Feature 1 -->
+        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 hover:border-indigo-500/50 transition-all duration-300">
+          <div class="w-12 h-12 bg-indigo-500/10 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">KPIs en temps réel</h3>
+          <p class="text-slate-400">
+            Visualisez et analysez les indicateurs clés de performance des entreprises.
+          </p>
+          <div class="mt-4 text-xs text-indigo-400 font-medium">Accès administrateur</div>
+        </div>
+
+        <!-- Admin Feature 2 -->
+        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 hover:border-indigo-500/50 transition-all duration-300">
+          <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Gestion des rôles</h3>
+          <p class="text-slate-400">
+            Attribuez et gérez les permissions des utilisateurs avec précision.
+          </p>
+          <div class="mt-4 text-xs text-purple-400 font-medium">Contrôle total</div>
+        </div>
+
+        <!-- Admin Feature 3 -->
+        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 hover:border-indigo-500/50 transition-all duration-300">
+          <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Audit financier</h3>
+          <p class="text-slate-400">
+            Supervision complète des flux financiers et accès aux rapports détaillés.
+          </p>
+          <div class="mt-4 text-xs text-blue-400 font-medium">Vision consolidate</div>
+        </div>
+
+        <!-- Admin Feature 4 -->
+        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 hover:border-indigo-500/50 transition-all duration-300">
+          <div class="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Planification centralisée</h3>
+          <p class="text-slate-400">
+            Gérez les plannings et les ressources de tous vos départements.
+          </p>
+          <div class="mt-4 text-xs text-emerald-400 font-medium">Vue d'ensemble</div>
+        </div>
+
+        <!-- Admin Feature 5 -->
+        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 hover:border-indigo-500/50 transition-all duration-300">
+          <div class="w-12 h-12 bg-amber-500/10 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Sécurité renforcée</h3>
+          <p class="text-slate-400">
+            Journalisation des accès, audit trail et validation à deux facteurs.
+          </p>
+          <div class="mt-4 text-xs text-amber-400 font-medium">Protection maximale</div>
+        </div>
+
+        <!-- Admin Feature 6 -->
+        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 hover:border-indigo-500/50 transition-all duration-300">
+          <div class="w-12 h-12 bg-rose-500/10 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Support prioritaire</h3>
+          <p class="text-slate-400">
+            Assistance dédiée 24/7 avec gestion des incidents prioritaire.
+          </p>
+          <div class="mt-4 text-xs text-rose-400 font-medium">SLA garanti</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admin Stats Section -->
+  <section class="py-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-white mb-2">15k+</div>
+          <div class="text-sm text-slate-400">Utilisateurs actifs</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-white mb-2">98%</div>
+          <div class="text-sm text-slate-400">Taux de satisfaction</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-white mb-2">24/7</div>
+          <div class="text-sm text-slate-400">Support admin</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-white mb-2">50+</div>
+          <div class="text-sm text-slate-400">Intégrations</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admin CTA Section -->
+  <section class="py-20 border-t border-slate-800">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+      <div class="bg-gradient-to-r from-indigo-600/10 to-purple-600/10 rounded-3xl p-12 border border-indigo-500/20">
+        <h2 class="text-3xl font-bold text-white mb-4">
+          Prêt à piloter votre entreprise ?
+        </h2>
+        <p class="text-slate-400 mb-8 text-lg">
+          Accédez à votre espace d'administration pour une gestion optimale
+        </p>
+        <a *ngIf="authService.isAuthenticated()" routerLink="/dashboard" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg shadow-indigo-500/25">
+          Accéder à l'administration
+        </a>
+        <a *ngIf="!authService.isAuthenticated()" routerLink="/connexion" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg shadow-indigo-500/25">
+          Accéder à l'administration
+        </a>
+        <p class="mt-4 text-sm text-slate-500">
+          Espace réservé aux administrateurs et gestionnaires
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<app-footer></app-footer>
