@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Nav } from '../../components/nav/nav';
 import Footer from '../../components/footer/footer';
 import { Router } from '@angular/router';
@@ -22,7 +22,8 @@ export default class Connexion {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   togglePasswordVisibility(): void {
@@ -58,6 +59,7 @@ export default class Connexion {
         
         this.isLoading = false;
         this.router.navigate(['/dashboard']);
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Erreur de connexion', error);
@@ -74,6 +76,7 @@ export default class Connexion {
         }
         
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
