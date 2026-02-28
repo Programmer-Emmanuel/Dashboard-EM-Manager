@@ -11,7 +11,8 @@ export class EntrepriseModel {
   role!: string;
   created_at!: string;
   updated_at!: string;
-
+  is_active!: boolean;
+  fin_abonnement!: string | null;
   employes?: Employe[];
   produits?: Produit[];
 }

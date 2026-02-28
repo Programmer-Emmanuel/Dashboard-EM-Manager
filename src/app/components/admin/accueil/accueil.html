@@ -194,73 +194,8 @@
   </div>
 
   <!-- Cartes de soldes -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
     <!-- Solde Admin -->
-    <div *ngIf="isLoadingSoldes; else soldeAdminContent" class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6">
-      <div class="flex items-center justify-between mb-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-slate-700 rounded-lg animate-pulse"></div>
-          <div class="space-y-2">
-            <div class="h-4 bg-slate-700 rounded w-24 animate-pulse"></div>
-            <div class="h-3 bg-slate-700 rounded w-20 animate-pulse"></div>
-          </div>
-        </div>
-        <div class="w-8 h-8 bg-slate-700 rounded-lg animate-pulse"></div>
-      </div>
-      <div class="flex items-baseline justify-between">
-        <div>
-          <div class="h-8 bg-slate-700 rounded w-32 animate-pulse mb-2"></div>
-          <div class="h-4 bg-slate-700 rounded w-20 animate-pulse"></div>
-        </div>
-        <div class="text-right">
-          <div class="h-3 bg-slate-700 rounded w-16 animate-pulse mb-1"></div>
-          <div class="h-4 bg-slate-700 rounded w-12 animate-pulse"></div>
-        </div>
-      </div>
-    </div>
-    <ng-template #soldeAdminContent>
-      <div class="bg-gradient-to-br from-indigo-600/10 to-purple-600/10 backdrop-blur-sm rounded-xl border border-indigo-500/20 p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-indigo-500/20 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-              </svg>
-            </div>
-            <div>
-              <p class="text-sm text-slate-400">Solde Admin</p>
-              <p class="text-xs text-indigo-400">{{ adminInfo?.nom || 'Administrateur' }}</p>
-            </div>
-          </div>
-          <button (click)="toggleSoldeAdmin()" class="text-slate-400 hover:text-white transition-colors duration-200">
-            <svg *ngIf="showSoldeAdmin" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-            </svg>
-            <svg *ngIf="!showSoldeAdmin" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-            </svg>
-          </button>
-        </div>
-        <div class="flex items-baseline justify-between">
-          <div>
-            <p class="text-3xl font-bold text-white">
-              {{ showSoldeAdmin ? formatSolde(soldeAdmin) : hiddenSolde }}
-            </p>
-            <p class="text-xs text-green-400 mt-2 flex items-center gap-1">
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-              </svg>
-              +5.3% ce mois
-            </p>
-          </div>
-          <div class="text-right">
-            <p class="text-xs text-slate-400">Disponible</p>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-
     <!-- Solde Entreprises -->
     <div *ngIf="isLoadingSoldes; else soldeEntrepriseContent" class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6">
       <div class="flex items-center justify-between mb-4">

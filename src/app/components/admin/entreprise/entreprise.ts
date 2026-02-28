@@ -1,3 +1,5 @@
+// src/app/pages/entreprise/entreprise.component.ts
+
 import { Component, OnInit, HostListener, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,9 +18,9 @@ import {
   imports: [CommonModule, FormsModule],
   standalone: true,
   templateUrl: './entreprise.html',
-  styleUrl: './entreprise.css',
-})
-export default class Entreprise implements OnInit {
+  styleUrl: './entreprise.css'
+}) 
+export default class EntrepriseComponent implements OnInit {
   // Données principales
   entreprises: EntrepriseModel[] = [];
   filteredEntreprises: EntrepriseModel[] = [];
@@ -37,6 +39,7 @@ export default class Entreprise implements OnInit {
   showSearchUserModal = false;
   showResetPasswordModal = false;
   showDeleteModal = false;
+  showToggleModal = false;
   
   // Données pour les modales
   searchResults: Array<{ type: 'entreprise' | 'employe'; data: any }> = [];
@@ -54,6 +57,15 @@ export default class Entreprise implements OnInit {
     userName: ''
   };
 
+  // Formulaire pour activer/désactiver
+  toggleData = {
+    adminPassword: '',
+    entrepriseId: '',
+    entrepriseName: '',
+    currentStatus: false,
+    action: '' // 'activer' ou 'désactiver'
+  };
+
   // Pagination
   currentPage = 1;
   itemsPerPage = 10;
@@ -65,7 +77,7 @@ export default class Entreprise implements OnInit {
   constructor(
     private entrepriseService: EntrepriseService,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone // Ajouter NgZone
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -322,6 +334,88 @@ export default class Entreprise implements OnInit {
     this.cdr.detectChanges();
   }
 
+  // Modale d'activation/désactivation
+  openToggleModal(entreprise: EntrepriseModel): void {
+    this.toggleData = {
+      adminPassword: '',
+      entrepriseId: entreprise.id,
+      entrepriseName: entreprise.nom_entreprise,
+      currentStatus: entreprise.is_active,
+      action: entreprise.is_active ? 'désactiver' : 'activer'
+    };
+    this.showToggleModal = true;
+    document.body.style.overflow = 'hidden';
+    this.error = null;
+    this.successMessage = null;
+    this.cdr.detectChanges();
+  }
+
+  closeToggleModal(): void {
+    this.showToggleModal = false;
+    this.toggleData = {
+      adminPassword: '',
+      entrepriseId: '',
+      entrepriseName: '',
+      currentStatus: false,
+      action: ''
+    };
+    document.body.style.overflow = 'unset';
+    this.error = null;
+    this.cdr.detectChanges();
+  }
+
+  onSubmitToggle(): void {
+    if (!this.toggleData.adminPassword) {
+      this.error = 'Veuillez entrer votre mot de passe administrateur';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.error = null;
+
+    this.entrepriseService.toggleEntreprise(
+      this.toggleData.entrepriseId,
+      this.toggleData.adminPassword
+    ).subscribe({
+      next: (response: ActionResponse) => {
+        if (response.success) {
+          // Mettre à jour la liste des entreprises
+          const index = this.entreprises.findIndex(e => e.id === this.toggleData.entrepriseId);
+          if (index !== -1) {
+            this.entreprises[index].is_active = !this.toggleData.currentStatus;
+            // Mettre à jour aussi dans filteredEntreprises
+            const filteredIndex = this.filteredEntreprises.findIndex(e => e.id === this.toggleData.entrepriseId);
+            if (filteredIndex !== -1) {
+              this.filteredEntreprises[filteredIndex].is_active = !this.toggleData.currentStatus;
+            }
+          }
+
+          this.successMessage = response.message || `Entreprise ${this.toggleData.action} avec succès`;
+          this.cdr.detectChanges();
+          
+          this.ngZone.run(() => {
+            setTimeout(() => {
+              this.closeToggleModal();
+              this.successMessage = null;
+              this.cdr.detectChanges();
+            }, 3000);
+          });
+        } else {
+          this.error = response.message || 'Erreur lors de l\'opération';
+        }
+        this.isSubmitting = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur toggle:', err);
+        this.error = err.error?.message || 'Erreur de connexion au serveur';
+        this.isSubmitting = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   // Modale de réinitialisation de mot de passe
   openResetPasswordModal(type: string, data: any): void {
     this.resetPasswordData = {
@@ -345,7 +439,6 @@ export default class Entreprise implements OnInit {
     };
     document.body.style.overflow = 'unset';
     
-    // CORRECTION: Mettre à jour successMessage dans la zone Angular
     this.ngZone.run(() => {
       this.successMessage = null;
       this.cdr.detectChanges();
@@ -372,7 +465,6 @@ export default class Entreprise implements OnInit {
           this.successMessage = response.message || 'Mot de passe réinitialisé avec succès';
           this.cdr.detectChanges();
           
-          // CORRECTION: Utiliser ngZone.run pour le setTimeout
           this.ngZone.run(() => {
             setTimeout(() => {
               this.closeResetPasswordModal();
@@ -421,7 +513,6 @@ export default class Entreprise implements OnInit {
           this.loadEntreprises(); // Recharger la liste
           this.successMessage = response.message || 'Entreprise supprimée avec succès';
           
-          // CORRECTION: Utiliser ngZone.run pour le setTimeout
           this.ngZone.run(() => {
             setTimeout(() => {
               this.successMessage = null;
@@ -455,11 +546,21 @@ export default class Entreprise implements OnInit {
     });
   }
 
+  formatFinAbonnement(date: string | null): string {
+    if (!date) return 'Non définie';
+    return new Date(date).toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  }
+
   closeAllModals(): void {
     this.closeDetailsModal();
     this.closeSearchUserModal();
     this.closeResetPasswordModal();
     this.closeDeleteModal();
+    this.closeToggleModal();
   }
 
   clearMessages(): void {

@@ -35,7 +35,7 @@ export class EntrepriseService {
     );
   }
 
-  /* 🔹 Détail d'une entreprise */
+  /* 🔹 Détail entreprise */
   getEntreprise(id: string): Observable<EntrepriseResponse> {
     return this.http.get<EntrepriseResponse>(
       `${this.apiUrl}/entreprise/${id}`,
@@ -43,7 +43,16 @@ export class EntrepriseService {
     );
   }
 
-  /* 🔹 Supprimer une entreprise */
+  /* 🔹 Activer / Désactiver entreprise */
+  toggleEntreprise(id: string, adminPassword: string): Observable<ActionResponse> {
+    return this.http.post<ActionResponse>(
+      `${this.apiUrl}/active/entreprise/${id}`,
+      { password: adminPassword },
+      { headers: this.getHeaders() }
+    );
+  }
+
+  /* 🔹 Supprimer */
   deleteEntreprise(id: string): Observable<ActionResponse> {
     return this.http.post<ActionResponse>(
       `${this.apiUrl}/delete/entreprise/${id}`,
@@ -52,7 +61,7 @@ export class EntrepriseService {
     );
   }
 
-  /* 🔹 Réinitialiser mot de passe */
+  /* 🔹 Reset password */
   resetPassword(id: string, adminPassword: string): Observable<ActionResponse> {
     return this.http.post<ActionResponse>(
       `${this.apiUrl}/reset/password/${id}`,
